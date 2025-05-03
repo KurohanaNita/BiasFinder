@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: biasbinder_db_container
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRES_DB}
+      - POSTGRESQL_POSTGRES_PASSWORD=${POSTGRES_SUPERUSER_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - biasbinder_db_data:/bitnami/biasbinder_db
+      - ./init.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./views.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./data_import/Insert_group_ATZ.sql:/docker-entrypoint-initdb.d/3.sql
+
+volumes:
+  biasbinder_db_data:

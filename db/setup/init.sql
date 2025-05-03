@@ -68,7 +68,7 @@ CREATE TABLE users
    password VARCHAR(255) NOT NULL,
    is_admin BOOLEAN default false,
    is_2fa_enabled BOOLEAN default false,
-   2fa_code VARCHAR(10) default null,
+   code_2fa VARCHAR(10) default null,
    oauth_provider VARCHAR(30) default null,
    oauth_id VARCHAR(255) default null,
    PRIMARY KEY (user_id)

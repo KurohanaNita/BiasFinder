@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model artists {
+  artists_id     Int              @id @default(autoincrement())
+  stage_name     String?          @unique @db.VarChar(50)
+  active         Boolean?         @default(true)
+  proposed       Boolean?         @default(true)
+  groups_artists groups_artists[]
+  photocards     photocards[]
+}
+
+model groups {
+  groups_id               Int                       @id @default(autoincrement())
+  groups_name             String?                   @unique @db.VarChar(50)
+  gender                  String?                   @db.Char(1)
+  proposed                Boolean?                  @default(true)
+  groups_artists          groups_artists[]
+  groups_official_sources groups_official_sources[]
+}
+
+model groups_artists {
+  groups_id  Int
+  artists_id Int
+  artists    artists @relation(fields: [artists_id], references: [artists_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_artists")
+  groups     groups  @relation(fields: [groups_id], references: [groups_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_groups")
+
+  @@id([groups_id, artists_id])
+}
+
+model groups_official_sources {
+  groups_id           Int
+  official_sources_id Int
+  groups              groups           @relation(fields: [groups_id], references: [groups_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_groups")
+  official_sources    official_sources @relation(fields: [official_sources_id], references: [official_sources_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_official_sources")
+
+  @@id([groups_id, official_sources_id])
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model official_sources {
+  official_sources_id     Int                       @id @default(autoincrement())
+  title                   String?                   @db.VarChar(255)
+  version_name            String?                   @db.VarChar(255)
+  type                    source_type_enum?
+  proposed                Boolean?                  @default(true)
+  groups_official_sources groups_official_sources[]
+  photocards              photocards[]
+}
+
+model photocards {
+  pc_id                Int                    @id @default(autoincrement())
+  pc_name              String?                @db.VarChar(255)
+  shop_name            String?                @db.VarChar(255)
+  url                  String?                @db.VarChar(255)
+  pc_type              pc_type_enum?
+  proposed             Boolean?               @default(true)
+  artists_id           Int
+  official_sources_id  Int
+  artists              artists                @relation(fields: [artists_id], references: [artists_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_artists")
+  official_sources     official_sources       @relation(fields: [official_sources_id], references: [official_sources_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_official_sources")
+  users_photocard_list users_photocard_list[]
+
+  @@unique([pc_name, pc_type, artists_id, official_sources_id, url], map: "unique_pc_name_type_artist_official_sources")
+}
+
+model users {
+  user_id              Int                    @id @default(autoincrement())
+  username             String                 @unique @db.VarChar(50)
+  password             String                 @db.VarChar(255)
+  is_admin             Boolean?               @default(false)
+  is_2fa_enabled       Boolean?               @default(false)
+  code_2fa             String?                @db.VarChar(10)
+  oauth_provider       String?                @db.VarChar(30)
+  oauth_id             String?                @db.VarChar(255)
+  users_photocard_list users_photocard_list[]
+}
+
+model users_photocard_list {
+  user_id    Int
+  pc_id      Int
+  have       Boolean?   @default(false)
+  photocards photocards @relation(fields: [pc_id], references: [pc_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_photocards")
+  users      users      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_users")
+
+  @@id([user_id, pc_id])
+}
+
+enum pc_type_enum {
+  PCA
+  POB
+  PCO
+  PCE
+}
+
+enum source_type_enum {
+  ALBUM
+  OTHER
+  EVENT
+}

@@ -14,9 +14,11 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  googleAuth(@Req() req: Request) {
-    console.log('Google Auth super debug Test');
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  googleAuthCallback(@Req() req: Request) {
+    console.log('Google Auth Callback super debug Test');
     console.log(req);
-    return 'Google Auth';
+    return 'Google Auth Callback';
   }
 }

@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "biasfinder_bruno_collection",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

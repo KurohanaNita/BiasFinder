@@ -15,6 +15,8 @@ export class AuthController {
   @Get('google')
   @UseGuards(AuthGuard('google'))
   googleAuth(@Req() req: Request) {
-    return 'testGuard';
+    console.log('Google Auth super debug Test');
+    console.log(req);
+    return 'Google Auth';
   }
 }

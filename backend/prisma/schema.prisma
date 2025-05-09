@@ -73,8 +73,9 @@ model photocards {
 
 model users {
   user_id              Int                    @id @default(autoincrement())
-  username             String                 @unique @db.VarChar(50)
-  password             String                 @db.VarChar(255)
+  username             String?                @unique @db.VarChar(50)
+  email                String                 @unique @db.VarChar(255)
+  password             String?                @db.VarChar(255)
   is_admin             Boolean?               @default(false)
   is_2fa_enabled       Boolean?               @default(false)
   code_2fa             String?                @db.VarChar(10)

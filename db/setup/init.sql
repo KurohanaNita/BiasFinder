@@ -64,8 +64,9 @@ ON photocards(pc_name,pc_type,artists_id,official_sources_id,url);
 CREATE TABLE users
 (
    user_id SERIAL,
-   username VARCHAR(50) NOT NULL UNIQUE,
-   password VARCHAR(255) NOT NULL,
+   username VARCHAR(50) UNIQUE,
+   email VARCHAR(255) NOT NULL UNIQUE,
+   password VARCHAR(255),
    is_admin BOOLEAN default false,
    is_2fa_enabled BOOLEAN default false,
    code_2fa VARCHAR(10) default null,

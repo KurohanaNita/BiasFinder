@@ -16,4 +16,38 @@ export class UsersService {
       throw new Error('Unable to retrieve users');
     }
   }
+
+  async findOrCreateUser(user: any) {
+    const currentUser = user;
+
+    try {
+      const existingUser = await this.prisma.users.findUnique({
+        where: {
+          email: currentUser.email,
+        },
+      });
+      if (existingUser === null) {
+        const newUser = await this.prisma.users.create({
+          data: {
+            email: currentUser.email,
+            oauth_provider: currentUser.provider,
+            oauth_id: currentUser.oauthId,
+          },
+        });
+      } else {
+        const updatedUser = await this.prisma.users.update({
+          where: {
+            email: currentUser.email,
+          },
+          data: {
+            oauth_provider: currentUser.provider,
+            oauth_id: currentUser.oauthId,
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Unable to retrieve users:', error);
+      throw new Error('Unable to retrieve users');
+    }
+  }
 }

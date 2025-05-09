@@ -2,12 +2,12 @@ SET SEARCH_PATH TO biasbinder_bst;
 
 -- Create the table users
 
-INSERT INTO users (username, password, is_admin) VALUES
-                                                     ('jungkook97', 'hashed_password_1', FALSE),
-                                                     ('blackpinkfan', 'hashed_password_2', FALSE),
-                                                     ('exo-l', 'hashed_password_3', FALSE),
-                                                     ('straykidsfan', 'hashed_password_4', FALSE),
-                                                     ('ateezlover', 'hashed_password_5', FALSE);
+INSERT INTO users (username, email, password, is_admin) VALUES
+                                                     ('jungkook97','test1@gmail.com', 'hashed_password_1', FALSE),
+                                                     ('blackpinkfan', 'test2@gmail.com', 'hashed_password_2', FALSE),
+                                                     ('exo-l', 'test3@gmail.com','hashed_password_3', FALSE),
+                                                     ('straykidsfan', 'test4@gmail.com','hashed_password_4', FALSE),
+                                                     ('ateezlover','test5@gmail.com', 'hashed_password_5', FALSE);
 
 -- Jungkook97
 INSERT INTO users_photocard_list (user_id, pc_id, have) VALUES

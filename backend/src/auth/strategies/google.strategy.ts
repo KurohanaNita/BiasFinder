@@ -19,6 +19,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: any,
     done: Function,
   ) {
-    return profile;
+    return {
+      email: profile.emails[0].value,
+      oauthId: profile.id,
+      provider: profile.provider,
+    };
   }
 }
